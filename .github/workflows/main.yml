@@ -32,3 +32,8 @@ jobs:
           python main.py
         env:
             URL: ${{ github.event.inputs.url }} # if run.py requires passwords..etc, set it as secrets
+
+        uses: actions/upload-artifact@v3
+        with:
+          name: writeup
+          path: writeup.txt

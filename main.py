@@ -42,17 +42,19 @@ class Formatter:
 ------------"""
 
     def format(self):
-        print(self.header)
+        s=''
+        s+=self.header
 
         for i,row in self.df.iterrows():
             if pandas.isna(row[Headers.name]):
                 break
-            self.format_row(row)
+            s+=self.format_row(row)
 
-        print(self.footer)
+        s+=self.footer
+        return s
 
     def format_row(self,row):
-        s = ""
+        s = "\n"
         s += row[Headers.name]
         s+="\n"
 
@@ -65,7 +67,7 @@ class Formatter:
         s = self.append_optional_field(s,row,Headers.other_penalty)
         s = self.append_optional_field(s,row,Headers.majority_opinion,"Nothing to see here")
 
-        print(s)
+        return s
 
     @staticmethod
     def append_field(string, row, field):
@@ -95,7 +97,9 @@ def main(url):
 
     formatter = Formatter(df)
 
-    formatter.format()
+    with open("writeup.txt",'wb') as f:
+        f.write(formatter.format().encode('utf-8'))
+
 
 
 if __name__ == '__main__':
