@@ -5,7 +5,10 @@ name: Format
 # Controls when the workflow will run
 on:
   workflow_dispatch:
-
+    inputs:
+      url:
+        description: 'csv URL'
+        required: true
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -28,4 +31,4 @@ jobs:
         run: |
           python main.py
         env:
-            URL: ${{ secrets.url }} # if run.py requires passwords..etc, set it as secrets
+            URL: ${{ github.event.url }} # if run.py requires passwords..etc, set it as secrets
