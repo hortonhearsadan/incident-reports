@@ -1,12 +1,9 @@
-import codecs
-import csv
-from contextlib import closing
+import os
+from enum import Enum
 
 import pandas
-import requests
-import urllib.request
 
-class Headers:
+class Headers(str,Enum):
     race = "Race"
     name = "Name"
     drivers_involved = "Drivers Involved"
@@ -48,6 +45,8 @@ class Formatter:
         print(self.header)
 
         for i,row in self.df.iterrows():
+            if pandas.isna(row[Headers.name]):
+                break
             self.format_row(row)
 
         print(self.footer)
@@ -62,6 +61,7 @@ class Formatter:
 
         s = self.append_optional_field(s,row,Headers.drivers_at_fault,"None")
         s = self.append_optional_field(s,row,Headers.time_penalty)
+        s = self.append_optional_field(s,row,Headers.penalty_points)
         s = self.append_optional_field(s,row,Headers.other_penalty)
         s = self.append_optional_field(s,row,Headers.majority_opinion,"Nothing to see here")
 
@@ -69,7 +69,7 @@ class Formatter:
 
     @staticmethod
     def append_field(string, row, field):
-        if ";" in str(row[field]):
+        if field in (Headers.drivers_at_fault, Headers.drivers_involved):
             row[field] = replace_semi_colon(row[field])
         string+= f"{field}: {row[field]}"
         string+="\n"
@@ -78,7 +78,7 @@ class Formatter:
     @staticmethod
     def append_optional_field(s, row, field, default=None):
         if not pandas.isna(row[field]):
-            if ";" in str(row[field]):
+            if field in (Headers.drivers_at_fault,Headers.drivers_involved):
                 row[field] = replace_semi_colon(row[field])
             s+= f"{field}: {row[field]}"
             s+='\n'
@@ -99,9 +99,7 @@ def main(url):
 
 
 if __name__ == '__main__':
-    URL = "https://docs.google.com/spreadsheets/d/1acQzgzCSI18Rsb0aQrjBqdVdM_bRfgEhgpZIA8LTP-Y/edit#gid=0"
+    URL = os.getenv("URL")
     csv_export_url = URL.replace('/edit#gid=', '/export?format=csv&gid=')
     main(csv_export_url)
 
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
