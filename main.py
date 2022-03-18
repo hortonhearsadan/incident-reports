@@ -1,3 +1,4 @@
+import datetime
 import os
 from enum import Enum
 
@@ -96,10 +97,10 @@ def main(url):
     df = pd.read_csv(url)
 
     formatter = Formatter(df)
-
-    with open("writeup.txt",'wb') as f:
-        f.write(formatter.format().encode('utf-8'))
-
+    s = formatter.format().encode('utf-8')
+    with open(f"writeup-{datetime.datetime.today().date()}.txt",'wb') as f:
+        f.write(s)
+    print(s.decode())
 
 
 if __name__ == '__main__':
