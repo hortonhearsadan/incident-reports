@@ -37,4 +37,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: writeup
-          path: writeup.txt
+          path: writeup*.txt
