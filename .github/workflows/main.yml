@@ -31,4 +31,4 @@ jobs:
         run: |
           python main.py
         env:
-            URL: ${{ github.event.url }} # if run.py requires passwords..etc, set it as secrets
+            URL: ${{ github.event.inputs.url }} # if run.py requires passwords..etc, set it as secrets
